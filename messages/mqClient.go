@@ -139,5 +139,3 @@ func (c *MqClient) Run() error {
 
 	return nil
 }
-
-type messageHandler func(data []byte)

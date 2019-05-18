@@ -4,6 +4,8 @@ import (
 	"github.com/studtool/common/queues"
 )
 
+type messageHandler func(data []byte)
+
 func (c *MqClient) handleUserCreated(body []byte) {
 	createdUserData := &queues.CreatedUserData{}
 	if err := c.unmarshalMessageBody(body, createdUserData); err != nil {
