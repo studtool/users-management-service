@@ -10,6 +10,7 @@ func (c *MqClient) handleUserCreated(body []byte) {
 		c.writeErrorLog(err)
 	} else {
 		c.publishProfileToCreateMessage(createdUserData)
+		c.publishAvatarToCreateMessage(createdUserData)
 		c.publishDocumentUserToCreateMessage(createdUserData)
 
 		c.writeMessageConsumedLog(c.createdUsersQueue.Name, createdUserData)
@@ -22,48 +23,9 @@ func (c *MqClient) handleUserDeleted(body []byte) {
 		c.writeErrorLog(err)
 	} else {
 		c.publishProfileToDeleteMessage(deletedUserData)
+		c.publishAvatarToDeleteMessage(deletedUserData)
 		c.publishDocumentUserToDeletedMessage(deletedUserData)
 
 		c.writeMessageConsumedLog(c.createdUsersQueue.Name, deletedUserData)
 	}
-}
-
-func (c *MqClient) publishProfileToCreateMessage(
-	createdUserData *queues.CreatedUserData,
-) {
-	c.publishMessage(c.profilesToCreateQueue.Name,
-		&queues.ProfileToCreateData{
-			UserID: createdUserData.UserID,
-		},
-	)
-}
-
-func (c *MqClient) publishProfileToDeleteMessage(
-	deletedUserData *queues.DeletedUserData,
-) {
-	c.publishMessage(c.profilesToDeleteQueue.Name,
-		&queues.ProfileToDeleteData{
-			UserID: deletedUserData.UserID,
-		},
-	)
-}
-
-func (c *MqClient) publishDocumentUserToCreateMessage(
-	createdUserData *queues.CreatedUserData,
-) {
-	c.publishMessage(c.documentUsersToCreateQueue.Name,
-		&queues.ProfileToCreateData{
-			UserID: createdUserData.UserID,
-		},
-	)
-}
-
-func (c *MqClient) publishDocumentUserToDeletedMessage(
-	deletedUserData *queues.DeletedUserData,
-) {
-	c.publishMessage(c.documentUsersToDeleteQueue.Name,
-		&queues.ProfileToDeleteData{
-			UserID: deletedUserData.UserID,
-		},
-	)
 }

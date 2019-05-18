@@ -26,6 +26,9 @@ type MqClient struct {
 	profilesToCreateQueue amqp.Queue
 	profilesToDeleteQueue amqp.Queue
 
+	avatarsToCreateQueue amqp.Queue
+	avatarsToDeleteQueue amqp.Queue
+
 	documentUsersToCreateQueue amqp.Queue
 	documentUsersToDeleteQueue amqp.Queue
 }
@@ -95,6 +98,30 @@ func (c *MqClient) OpenConnection() error {
 
 	c.profilesToDeleteQueue, err = ch.QueueDeclare(
 		queues.ProfilesToDeleteQueueName,
+		false,
+		false,
+		false,
+		false,
+		nil,
+	)
+	if err != nil {
+		return err
+	}
+
+	c.avatarsToCreateQueue, err = ch.QueueDeclare(
+		queues.AvatarsToCreateQueueName,
+		false,
+		false,
+		false,
+		false,
+		nil,
+	)
+	if err != nil {
+		return err
+	}
+
+	c.avatarsToDeleteQueue, err = ch.QueueDeclare(
+		queues.AvatarsToDeleteQueueName,
 		false,
 		false,
 		false,
