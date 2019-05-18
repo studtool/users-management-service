@@ -23,22 +23,22 @@ func main() {
 	utils.AssertOk(c.Provide(messages.NewMqClient))
 	utils.AssertOk(c.Invoke(func(q *messages.MqClient) {
 		if err := q.OpenConnection(); err != nil {
-			beans.Logger.Fatal(err)
+			beans.Logger().Fatal(err)
 		} else {
-			beans.Logger.Info("queue: connection open")
+			beans.Logger().Info("queue: connection open")
 		}
 		if err := q.Run(); err != nil {
-			beans.Logger.Fatal(err)
+			beans.Logger().Fatal(err)
 		} else {
-			beans.Logger.Info("queue: ready to receive messages")
+			beans.Logger().Info("queue: ready to receive messages")
 		}
 	}))
 	defer func() {
 		utils.AssertOk(c.Invoke(func(q *messages.MqClient) {
 			if err := q.CloseConnection(); err != nil {
-				beans.Logger.Fatal(err)
+				beans.Logger().Fatal(err)
 			} else {
-				beans.Logger.Info("queue: connection closed")
+				beans.Logger().Info("queue: connection closed")
 			}
 		}))
 	}()

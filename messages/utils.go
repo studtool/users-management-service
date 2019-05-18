@@ -38,7 +38,7 @@ func (c *MqClient) writeMessagePublishedLog(
 	queueName string,
 	data easyjson.Marshaler,
 ) {
-	beans.Logger.Info(
+	beans.Logger().Info(
 		fmt.Sprintf("message published (%s): %v", queueName, data),
 	)
 }
@@ -47,7 +47,7 @@ func (c *MqClient) writeMessagePublicationErrorLog(
 	queueName string,
 	data easyjson.Marshaler,
 ) {
-	beans.Logger.Error(
+	beans.Logger().Error(
 		fmt.Sprintf("message not published (%s): %v", queueName, data),
 	)
 }
@@ -56,7 +56,7 @@ func (c *MqClient) writeMessageConsumedLog(
 	queueName string,
 	data easyjson.Marshaler,
 ) {
-	beans.Logger.Info(
+	beans.Logger().Info(
 		fmt.Sprintf("message consumed (%s): %v", queueName, data),
 	)
 }
@@ -65,13 +65,13 @@ func (c *MqClient) writeMessageConsumptionErrorLog(
 	queueName string,
 	data easyjson.Marshaler,
 ) {
-	beans.Logger.Error(
+	beans.Logger().Error(
 		fmt.Sprintf("message not consumed (%s): %v", queueName, data),
 	)
 }
 
 func (c *MqClient) writeErrorLog(err error) {
 	if err != nil {
-		beans.Logger.Error(err)
+		beans.Logger().Error(err)
 	}
 }
