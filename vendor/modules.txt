@@ -10,10 +10,14 @@ github.com/sirupsen/logrus
 # github.com/streadway/amqp v0.0.0-20190404075320-75d898a42a94
 github.com/streadway/amqp
 # github.com/studtool/common v0.0.0-20190518150158-798c0b8db3ef
+github.com/studtool/common/utils
 github.com/studtool/common/logs
 github.com/studtool/common/config
 github.com/studtool/common/consts
 github.com/studtool/common/queues
-github.com/studtool/common/utils
+# go.uber.org/dig v1.7.0
+go.uber.org/dig
+go.uber.org/dig/internal/digreflect
+go.uber.org/dig/internal/dot
 # golang.org/x/sys v0.0.0-20190516110030-61b9204099cb
 golang.org/x/sys/unix
