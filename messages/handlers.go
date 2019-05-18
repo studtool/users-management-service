@@ -11,11 +11,11 @@ func (c *MqClient) handleUserCreated(body []byte) {
 	if err := c.unmarshalMessageBody(body, createdUserData); err != nil {
 		c.writeErrorLog(err)
 	} else {
+		c.writeMessageConsumedLog(c.createdUsersQueue.Name, createdUserData)
+
 		c.publishProfileToCreateMessage(createdUserData)
 		c.publishAvatarToCreateMessage(createdUserData)
 		c.publishDocumentUserToCreateMessage(createdUserData)
-
-		c.writeMessageConsumedLog(c.createdUsersQueue.Name, createdUserData)
 	}
 }
 
@@ -24,10 +24,10 @@ func (c *MqClient) handleUserDeleted(body []byte) {
 	if err := c.unmarshalMessageBody(body, deletedUserData); err != nil {
 		c.writeErrorLog(err)
 	} else {
+		c.writeMessageConsumedLog(c.createdUsersQueue.Name, deletedUserData)
+
 		c.publishProfileToDeleteMessage(deletedUserData)
 		c.publishAvatarToDeleteMessage(deletedUserData)
 		c.publishDocumentUserToDeletedMessage(deletedUserData)
-
-		c.writeMessageConsumedLog(c.createdUsersQueue.Name, deletedUserData)
 	}
 }
