@@ -118,8 +118,6 @@ func (c *MqClient) CloseConnection() error {
 	return c.connection.Close()
 }
 
-type MessageHandler func(data []byte)
-
 func (c *MqClient) Run() error {
 	err := c.runConsumer(
 		queues.CreatedUsersQueueName,
