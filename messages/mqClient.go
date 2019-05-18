@@ -53,109 +53,60 @@ func (c *MqClient) OpenConnection() error {
 		return err
 	}
 
-	ch, err := conn.Channel()
-	if err != nil {
-		return err
-	}
-
-	c.createdUsersQueue, err = ch.QueueDeclare(
-		queues.CreatedUsersQueueName,
-		false,
-		false,
-		false,
-		false,
-		nil,
-	)
-	if err != nil {
-		return err
-	}
-
-	c.deletedUsersQueue, err = ch.QueueDeclare(
-		queues.DeletedUsersQueueName,
-		false,
-		false,
-		false,
-		false,
-		nil,
-	)
-	if err != nil {
-		return err
-	}
-
-	c.profilesToCreateQueue, err = ch.QueueDeclare(
-		queues.ProfilesToCreateQueueName,
-		false,
-		false,
-		false,
-		false,
-		nil,
-	)
-	if err != nil {
-		return err
-	}
-
-	c.profilesToDeleteQueue, err = ch.QueueDeclare(
-		queues.ProfilesToDeleteQueueName,
-		false,
-		false,
-		false,
-		false,
-		nil,
-	)
-	if err != nil {
-		return err
-	}
-
-	c.avatarsToCreateQueue, err = ch.QueueDeclare(
-		queues.AvatarsToCreateQueueName,
-		false,
-		false,
-		false,
-		false,
-		nil,
-	)
-	if err != nil {
-		return err
-	}
-
-	c.avatarsToDeleteQueue, err = ch.QueueDeclare(
-		queues.AvatarsToDeleteQueueName,
-		false,
-		false,
-		false,
-		false,
-		nil,
-	)
-	if err != nil {
-		return err
-	}
-
-	c.documentUsersToCreateQueue, err = ch.QueueDeclare(
-		queues.DocumentUsersToCreateQueueName,
-		false,
-		false,
-		false,
-		false,
-		nil,
-	)
-	if err != nil {
-		return err
-	}
-
-	c.documentUsersToDeleteQueue, err = ch.QueueDeclare(
-		queues.DocumentUsersToDeleteQueueName,
-		false,
-		false,
-		false,
-		false,
-		nil,
-	)
-	if err != nil {
-		return err
-	}
-
-	c.channel = ch
 	c.connection = conn
+
+	c.channel, err = conn.Channel()
+	if err != nil {
+		return err
+	}
+
+	c.createdUsersQueue, err =
+		c.declareQueue(queues.CreatedUsersQueueName)
+	if err != nil {
+		return err
+	}
+
+	c.deletedUsersQueue, err =
+		c.declareQueue(queues.DeletedUsersQueueName)
+	if err != nil {
+		return err
+	}
+
+	c.profilesToCreateQueue, err =
+		c.declareQueue(queues.ProfilesToCreateQueueName)
+	if err != nil {
+		return err
+	}
+
+	c.profilesToDeleteQueue, err =
+		c.declareQueue(queues.ProfilesToDeleteQueueName)
+	if err != nil {
+		return err
+	}
+
+	c.avatarsToCreateQueue, err =
+		c.declareQueue(queues.AvatarsToCreateQueueName)
+	if err != nil {
+		return err
+	}
+
+	c.avatarsToDeleteQueue, err =
+		c.declareQueue(queues.AvatarsToDeleteQueueName)
+	if err != nil {
+		return err
+	}
+
+	c.documentUsersToCreateQueue, err =
+		c.declareQueue(queues.DocumentUsersToCreateQueueName)
+	if err != nil {
+		return err
+	}
+
+	c.documentUsersToDeleteQueue, err =
+		c.declareQueue(queues.DocumentUsersToDeleteQueueName)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }

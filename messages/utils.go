@@ -11,6 +11,17 @@ import (
 	"github.com/studtool/users-management-service/beans"
 )
 
+func (c *MqClient) declareQueue(queueName string) (amqp.Queue, error) {
+	return c.channel.QueueDeclare(
+		queueName,
+		false,
+		false,
+		false,
+		false,
+		nil,
+	)
+}
+
 func (c *MqClient) runConsumer(
 	queueName string,
 	handler messageHandler,
