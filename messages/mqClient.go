@@ -3,10 +3,8 @@ package messages
 import (
 	"fmt"
 
-	"github.com/mailru/easyjson"
 	"github.com/streadway/amqp"
 
-	"github.com/studtool/common/consts"
 	"github.com/studtool/common/queues"
 	"github.com/studtool/common/utils"
 
@@ -172,65 +170,23 @@ func (c *MqClient) CloseConnection() error {
 type MessageHandler func(data []byte)
 
 func (c *MqClient) Run() error {
-	if err := c.recvCreatedUsersData(); err != nil {
-		return err
-	}
-	if err := c.recvDeletedUsersData(); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (c *MqClient) recvCreatedUsersData() error {
-	messages, err := c.channel.Consume(
-		c.createdUsersQueue.Name,
-		consts.EmptyString,
-		true,
-		false,
-		false,
-		false,
-		nil,
+	err := c.runConsumer(
+		queues.CreatedUsersQueueName,
+		c.handleUserCreated,
 	)
 	if err != nil {
 		return err
 	}
 
-	go func() {
-		for d := range messages {
-			c.handleUserCreated(d.Body)
-		}
-	}()
-
-	return nil
-}
-
-func (c *MqClient) recvDeletedUsersData() error {
-	messages, err := c.channel.Consume(
-		c.deletedUsersQueue.Name,
-		consts.EmptyString,
-		true,
-		false,
-		false,
-		false,
-		nil,
+	err = c.runConsumer(
+		queues.DeletedUsersQueueName,
+		c.handleUserDeleted,
 	)
 	if err != nil {
 		return err
 	}
 
-	go func() {
-		for d := range messages {
-			c.handleUserDeleted(d.Body)
-		}
-	}()
-
 	return nil
 }
 
-func (c *MqClient) marshalMessageBody(v easyjson.Marshaler) ([]byte, error) {
-	return easyjson.Marshal(v)
-}
-
-func (c *MqClient) unmarshalMessageBody(data []byte, v easyjson.Unmarshaler) error {
-	return easyjson.Unmarshal(data, v)
-}
+type messageHandler func(data []byte)

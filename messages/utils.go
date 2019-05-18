@@ -11,6 +11,32 @@ import (
 	"github.com/studtool/users-management-service/beans"
 )
 
+func (c *MqClient) runConsumer(
+	queueName string,
+	handler messageHandler,
+) error {
+	messages, err := c.channel.Consume(
+		queueName,
+		consts.EmptyString,
+		true,
+		false,
+		false,
+		false,
+		nil,
+	)
+	if err != nil {
+		return err
+	}
+
+	go func() {
+		for d := range messages {
+			handler(d.Body)
+		}
+	}()
+
+	return nil
+}
+
 func (c *MqClient) publishMessage(
 	queueName string,
 	data easyjson.Marshaler,
@@ -32,6 +58,14 @@ func (c *MqClient) publishMessage(
 	} else {
 		c.writeMessagePublicationErrorLog(queueName, data)
 	}
+}
+
+func (c *MqClient) marshalMessageBody(v easyjson.Marshaler) ([]byte, error) {
+	return easyjson.Marshal(v)
+}
+
+func (c *MqClient) unmarshalMessageBody(data []byte, v easyjson.Unmarshaler) error {
+	return easyjson.Unmarshal(data, v)
 }
 
 func (c *MqClient) writeMessagePublishedLog(
