@@ -14,7 +14,7 @@ import (
 	"github.com/studtool/users-management-service/config"
 )
 
-type QueueClient struct {
+type MqClient struct {
 	connStr    string
 	connection *amqp.Connection
 
@@ -30,8 +30,8 @@ type QueueClient struct {
 	documentUsersToDeleteQueue amqp.Queue
 }
 
-func NewQueueClient() *QueueClient {
-	return &QueueClient{
+func NewMqClient() *MqClient {
+	return &MqClient{
 		connStr: fmt.Sprintf("amqp://%s:%s@%s:%d/",
 			config.MqUser.Value(), config.MqPassword.Value(),
 			config.MqHost.Value(), config.MqPort.Value(),
@@ -39,7 +39,7 @@ func NewQueueClient() *QueueClient {
 	}
 }
 
-func (c *QueueClient) OpenConnection() error {
+func (c *MqClient) OpenConnection() error {
 	var conn *amqp.Connection
 	err := utils.WithRetry(func(n int) (err error) {
 		if n > 0 {
@@ -135,7 +135,7 @@ func (c *QueueClient) OpenConnection() error {
 	return nil
 }
 
-func (c *QueueClient) CloseConnection() error {
+func (c *MqClient) CloseConnection() error {
 	if err := c.channel.Close(); err != nil {
 		return err
 	}
@@ -144,7 +144,7 @@ func (c *QueueClient) CloseConnection() error {
 
 type MessageHandler func(data []byte)
 
-func (c *QueueClient) Run() error {
+func (c *MqClient) Run() error {
 	if err := c.recvCreatedUsersData(); err != nil {
 		return err
 	}
@@ -154,7 +154,7 @@ func (c *QueueClient) Run() error {
 	return nil
 }
 
-func (c *QueueClient) recvCreatedUsersData() error {
+func (c *MqClient) recvCreatedUsersData() error {
 	messages, err := c.channel.Consume(
 		c.createdUsersQueue.Name,
 		consts.EmptyString,
@@ -177,7 +177,7 @@ func (c *QueueClient) recvCreatedUsersData() error {
 	return nil
 }
 
-func (c *QueueClient) recvDeletedUsersData() error {
+func (c *MqClient) recvDeletedUsersData() error {
 	messages, err := c.channel.Consume(
 		c.deletedUsersQueue.Name,
 		consts.EmptyString,
@@ -200,6 +200,10 @@ func (c *QueueClient) recvDeletedUsersData() error {
 	return nil
 }
 
-func (c *QueueClient) parseMessageBody(data []byte, v easyjson.Unmarshaler) error {
+func (c *MqClient) marshalMessageBody(v easyjson.Marshaler) ([]byte, error) {
+	return easyjson.Marshal(v)
+}
+
+func (c *MqClient) unmarshalMessageBody(data []byte, v easyjson.Unmarshaler) error {
 	return easyjson.Unmarshal(data, v)
 }

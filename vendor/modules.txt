@@ -9,7 +9,7 @@ github.com/mailru/easyjson/buffer
 github.com/sirupsen/logrus
 # github.com/streadway/amqp v0.0.0-20190404075320-75d898a42a94
 github.com/streadway/amqp
-# github.com/studtool/common v0.0.0-20190518150158-798c0b8db3ef
+# github.com/studtool/common v0.0.0-20190518160143-4fe0db3c504f
 github.com/studtool/common/utils
 github.com/studtool/common/logs
 github.com/studtool/common/config

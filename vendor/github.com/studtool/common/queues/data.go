@@ -1,6 +1,6 @@
 package queues
 
-//go:generate
+//go:generate easyjson
 
 //easyjson:json
 type ProfileToCreateData struct {
