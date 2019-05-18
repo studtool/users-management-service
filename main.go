@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"os/signal"
+	"syscall"
 
 	"go.uber.org/dig"
 
@@ -16,7 +17,8 @@ func main() {
 	c := dig.New()
 
 	ch := make(chan os.Signal)
-	signal.Notify(ch, os.Kill)
+	signal.Notify(ch, syscall.SIGINT)
+	signal.Notify(ch, syscall.SIGTERM)
 
 	utils.AssertOk(c.Provide(messages.NewQueueClient))
 	utils.AssertOk(c.Invoke(func(q *messages.QueueClient) {
